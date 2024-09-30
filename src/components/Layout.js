@@ -12,17 +12,16 @@ const Layout = ({ children }) => {
   };
 
   return (
-    <div className="flex h-screen">
-      <div className="w-1/4 bg-gray-200 flex flex-col justify-between p-4">
-        <div>
-          <h3 className="font-bold text-xl mb-4">Sidebar</h3>
-
+    <div className="flex flex-col lg:flex-row h-screen">
+      <div className="bg-gray-200 p-4 flex flex-col justify-between w-full lg:w-1/4">
+        <h3 className="font-bold text-xl mb-4">Sidebar</h3>
+        <div className="flex flex-col">
           <Link to="/dashboard" className="block mb-2">
             Dashboard
           </Link>
           {role === "admin" && (
             <Link to="/users" className="block mb-2">
-              User
+              Users
             </Link>
           )}
           <Link to="/students" className="block mb-2">
@@ -36,7 +35,7 @@ const Layout = ({ children }) => {
           Logout
         </button>
       </div>
-      <div className="w-3/4 p-6 overflow-auto">{children}</div>
+      <div className="w-full lg:w-3/4 p-6 overflow-auto">{children}</div>
     </div>
   );
 };

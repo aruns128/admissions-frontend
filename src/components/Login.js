@@ -13,7 +13,6 @@ const fetchQuote = async () => {
       throw new Error("Network response was not ok");
     }
     const data = await response.json();
-
     return `${data.content} - ${data.author}`; // Return the quote content
   } catch (error) {
     console.error("Failed to fetch quote", error);
@@ -25,6 +24,7 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [quote, setQuote] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // Track login status
   const navigate = useNavigate();
   const { login } = useAuth();
 
@@ -35,14 +35,16 @@ function Login() {
   };
 
   useEffect(() => {
-    getQuote(); // Fetch a quote on component mount
+    if (!isLoggedIn) {
+      getQuote(); // Fetch a quote on component mount
 
-    const intervalId = setInterval(() => {
-      getQuote(); // Fetch a new quote every 2 minutes
-    }, 10000); // 120000 milliseconds = 2 minutes
+      const intervalId = setInterval(() => {
+        getQuote(); // Fetch a new quote every 2 minutes
+      }, 120000); // 120000 milliseconds = 2 minutes
 
-    return () => clearInterval(intervalId); // Clear the interval on component unmount
-  }, []);
+      return () => clearInterval(intervalId); // Clear the interval on component unmount
+    }
+  }, [isLoggedIn]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -56,7 +58,7 @@ function Login() {
       const { token, role } = response.data; // Assuming your API returns the token and role
 
       login(token, role); // Pass the role to the login function
-
+      setIsLoggedIn(true); // Set login status to true
       navigate("/dashboard");
     } catch (error) {
       if (error.response && error.response.status === 401) {
@@ -70,13 +72,15 @@ function Login() {
   return (
     <div className="flex h-screen">
       {/* Left Section: Quotes */}
-      <div className="w-1/2 flex flex-col justify-center items-center bg-blue-100 p-6">
-        <h2 className="text-3xl font-bold mb-4">Inspiration</h2>
-        <p className="text-lg text-center italic">{quote}</p>
-      </div>
+      {!isLoggedIn && (
+        <div className="w-1/2 hidden lg:flex flex-col justify-center items-center bg-blue-100 p-6">
+          <h2 className="text-3xl font-bold mb-4">Inspiration</h2>
+          <p className="text-lg text-center italic">{quote}</p>
+        </div>
+      )}
 
       {/* Right Section: Login Form */}
-      <div className="w-1/2 flex justify-center items-center bg-white shadow-lg">
+      <div className="w-full lg:w-1/2 flex justify-center items-center bg-white shadow-lg">
         <form onSubmit={handleSubmit} className="max-w-md w-full p-6">
           <h1 className="text-2xl font-bold mb-6 text-center">Login</h1>
           <div className="mb-4">
