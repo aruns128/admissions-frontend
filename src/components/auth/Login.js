@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
-import api from "../utils/api";
+import { useAuth } from "../../context/AuthContext";
+import api from "../../utils/api";
 
 // Function to fetch a random quote
 const fetchQuote = async () => {

@@ -1,6 +1,6 @@
 import React from "react";
-import Layout from "../components/Layout"; // Adjust the import path as needed
-import { useAuth } from "../context/AuthContext";
+import Layout from "./Layout"; // Adjust the import path as needed
+import { useAuth } from "../../context/AuthContext";
 
 const Dashboard = () => {
   const { role } = useAuth();

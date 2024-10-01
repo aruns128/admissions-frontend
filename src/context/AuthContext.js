@@ -1,20 +1,34 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
+import Cookies from "js-cookie";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [token, setToken] = useState(null);
-  const [role, setRole] = useState(null); // Add role state
+  const [token, setToken] = useState(() => Cookies.get("token"));
+  const [role, setRole] = useState(() => Cookies.get("role"));
 
   const login = (newToken, userRole) => {
     setToken(newToken);
-    setRole(userRole); // Set the user role
+    setRole(userRole);
+    Cookies.set("token", newToken); // Store token in cookie
+    Cookies.set("role", userRole); // Store role in cookie
   };
 
   const logout = () => {
     setToken(null);
-    setRole(null); // Clear the role on logout
+    setRole(null);
+    Cookies.remove("token"); // Remove token from cookie
+    Cookies.remove("role"); // Remove role from cookie
   };
+
+  useEffect(() => {
+    const storedToken = Cookies.get("token");
+    const storedRole = Cookies.get("role");
+    if (storedToken && storedRole) {
+      setToken(storedToken);
+      setRole(storedRole);
+    }
+  }, []);
 
   return (
     <AuthContext.Provider value={{ token, role, login, logout }}>
@@ -23,6 +37,4 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-export const useAuth = () => {
-  return useContext(AuthContext);
-};
+export const useAuth = () => useContext(AuthContext);

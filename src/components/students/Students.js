@@ -1,5 +1,5 @@
 import React from "react";
-import Layout from "../components/Layout"; // Adjust the import path as needed
+import Layout from "../common/Layout"; // Adjust the import path as needed
 
 const Students = () => {
   return (
