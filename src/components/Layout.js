@@ -40,7 +40,13 @@ const Layout = ({ children }) => {
         </div>
 
         {/* Sidebar Links */}
-        <div className="flex flex-col space-y-4">
+        <div
+          className={
+            isSidebarOpen
+              ? `flex flex-col space-y-4`
+              : `flex flex-col space-y-4 items-center`
+          }
+        >
           <Link to="/dashboard" className="flex items-center space-x-4">
             <FiHome size={24} />
             {isSidebarOpen && <span className="text-lg">Dashboard</span>}
