@@ -2,15 +2,17 @@ import React, { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 import { FiMenu, FiUsers, FiHome, FiUser, FiLogOut } from "react-icons/fi"; // Icons from react-icons
+import { useToast } from "../../context/ToastContext";
 
 const Layout = ({ children }) => {
   const { role, logout } = useAuth();
   const navigate = useNavigate();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true); // State to toggle sidebar
-
+  const { showToast } = useToast();
   const handleLogout = () => {
     logout(); // Call logout from context
     navigate("/"); // Redirect to login page
+    showToast(`Logged out`, "info", 3000);
   };
 
   // Toggle sidebar open/close

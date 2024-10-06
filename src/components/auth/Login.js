@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import api from "../../utils/api";
+import { useToast } from "../../context/ToastContext";
 
 // Function to fetch a random quote
 const fetchQuote = async () => {
@@ -23,10 +24,13 @@ const fetchQuote = async () => {
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [emailError, setEmailError] = useState(""); // For email validation error
+  const [passwordError, setPasswordError] = useState(""); // For password validation error
   const [quote, setQuote] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false); // Track login status
   const navigate = useNavigate();
   const { login } = useAuth();
+  const { showToast } = useToast();
 
   // Function to get a new quote
   const getQuote = async () => {
@@ -49,6 +53,26 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    let valid = true;
+
+    if (!email) {
+      setEmailError("Email is required");
+      valid = false;
+    } else {
+      setEmailError("");
+    }
+
+    if (!password) {
+      setPasswordError("Password is required");
+      valid = false;
+    } else {
+      setPasswordError("");
+    }
+
+    if (!valid) {
+      return;
+    }
+
     try {
       const response = await api.post("/auth/login", {
         email,
@@ -60,12 +84,10 @@ function Login() {
       login(token, role); // Pass the role to the login function
       setIsLoggedIn(true); // Set login status to true
       navigate("/dashboard");
+      showToast(`Welcome ${role}`, "success", 3000);
     } catch (error) {
-      if (error.response && error.response.status === 401) {
-        alert("Invalid credentials");
-      } else {
-        alert("An error occurred. Please try again.");
-      }
+      showToast(`${error.response.data.message}`, "warning", 3000);
+      console.log(error.response.data.message);
     }
   };
 
@@ -83,26 +105,43 @@ function Login() {
       <div className="w-full lg:w-1/2 flex justify-center items-center bg-white shadow-lg">
         <form onSubmit={handleSubmit} className="max-w-md w-full p-6">
           <h1 className="text-2xl font-bold mb-6 text-center">Login</h1>
+
+          {/* Email Field */}
           <div className="mb-4">
             <label className="block text-gray-700">Email</label>
             <input
-              type="email"
+              type="text"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full p-2 border rounded"
-              required
+              onChange={(e) => {
+                setEmail(e.target.value);
+                if (e.target.value) setEmailError(""); // Remove error if input is filled
+              }}
+              className={`w-full p-2 border rounded ${
+                emailError ? "border-red-500" : ""
+              }`}
             />
+            {emailError && <p className="text-red-500 text-sm">{emailError}</p>}
           </div>
+
+          {/* Password Field */}
           <div className="mb-4">
             <label className="block text-gray-700">Password</label>
             <input
               type="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full p-2 border rounded"
-              required
+              onChange={(e) => {
+                setPassword(e.target.value);
+                if (e.target.value) setPasswordError(""); // Remove error if input is filled
+              }}
+              className={`w-full p-2 border rounded ${
+                passwordError ? "border-red-500" : ""
+              }`}
             />
+            {passwordError && (
+              <p className="text-red-500 text-sm">{passwordError}</p>
+            )}
           </div>
+
           <button
             type="submit"
             className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700 transition duration-200"
