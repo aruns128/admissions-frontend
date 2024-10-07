@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import api from "../../utils/api";
 import { useToast } from "../../context/ToastContext";
+import RequestResetPassword from "./RequestResetPassword"; // Import the RequestResetPassword component
 
 // Function to fetch a random quote
 const fetchQuote = async () => {
@@ -28,6 +29,7 @@ function Login() {
   const [passwordError, setPasswordError] = useState(""); // For password validation error
   const [quote, setQuote] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false); // Track login status
+  const [showRequestReset, setShowRequestReset] = useState(false); // State to control the modal visibility
   const navigate = useNavigate();
   const { login } = useAuth();
   const { showToast } = useToast();
@@ -91,6 +93,10 @@ function Login() {
     }
   };
 
+  const toggleRequestReset = () => {
+    setShowRequestReset(!showRequestReset);
+  };
+
   return (
     <div className="flex h-screen">
       {/* Left Section: Quotes */}
@@ -148,8 +154,27 @@ function Login() {
           >
             Login
           </button>
+
+          <p className="mt-4">
+            <button
+              type="button"
+              className="text-blue-600 hover:underline"
+              onClick={toggleRequestReset}
+            >
+              Forgot your password?
+            </button>
+          </p>
         </form>
       </div>
+
+      {/* Reset Password Modal */}
+      {showRequestReset && (
+        <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center z-50">
+          <div className="bg-white p-4 rounded shadow-md">
+            <RequestResetPassword onClose={toggleRequestReset} />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

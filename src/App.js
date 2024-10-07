@@ -6,12 +6,15 @@ import Users from "./components/users/Users"; // Create this component
 import Students from "./components/students/Students"; // Create this component
 import ProtectedRoute from "./components/helpers/ProtectedRoute"; // Import the ProtectedRoute
 import Unauthorized from "./components/helpers/Unauthorized";
+import ResetPassword from "./components/auth/ResetPassword";
 
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<Login />} />
+        {/* Update the ResetPassword Route to use element */}
+        <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/dashboard" element={<Dashboard />} />
         {/* Wrap the Route with ProtectedRoute */}
         <Route
@@ -23,9 +26,8 @@ function App() {
             />
           }
         />
-        <Route path="/students" element={<Students />} />{" "}
-        <Route path="/unauthorized" element={<Unauthorized />} />{" "}
-        {/* Route for Students */}
+        <Route path="/students" element={<Students />} />
+        <Route path="/unauthorized" element={<Unauthorized />} />
       </Routes>
     </Router>
   );
