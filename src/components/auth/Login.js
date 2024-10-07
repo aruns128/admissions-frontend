@@ -8,14 +8,9 @@ import RequestResetPassword from "./RequestResetPassword"; // Import the Request
 // Function to fetch a random quote
 const fetchQuote = async () => {
   try {
-    const response = await fetch(
-      "https://api.quotable.io/random?tags=education"
-    );
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
-    }
-    const data = await response.json();
-    return `${data.content} - ${data.author}`; // Return the quote content
+    const response = await api.get("quotes/random");
+    const data = response.data; // Axios automatically parses the JSON
+    return `${data.quote} - ${data.author}`; // Return the quote content
   } catch (error) {
     console.error("Failed to fetch quote", error);
     return "Education is the most powerful weapon which you can use to change the world. – Nelson Mandela";
