@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import api from "../../utils/api";
 import { useToast } from "../../context/ToastContext";
 import { FiEye, FiEyeOff } from "react-icons/fi"; // Import eye icons
+import Loader from "../common/Loader";
 
 const ResetPassword = () => {
   const location = useLocation();
@@ -16,6 +17,7 @@ const ResetPassword = () => {
   const [showPassword, setShowPassword] = useState(false); // State for showing password
   const [showConfirmPassword, setShowConfirmPassword] = useState(false); // State for showing confirm password
   const navigate = useNavigate();
+  const [showLoader, setShowLoader] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,7 +26,7 @@ const ResetPassword = () => {
       showToast("Passwords do not match", "warning", 3000);
       return;
     }
-
+    setShowLoader(true);
     try {
       const response = await api.post("/auth/reset-password", {
         token,
@@ -32,10 +34,12 @@ const ResetPassword = () => {
       });
       setMessage(response.data.message);
       showToast("Password has been reset successfully!", "success", 3000);
+      setShowLoader(false);
       navigate("/");
     } catch (error) {
       showToast(error.response.data.message, "warning", 3000);
       console.log(error.response.data.message);
+      setShowLoader(false);
     }
   };
 
@@ -124,6 +128,7 @@ const ResetPassword = () => {
         </form>
         {message && <p className="text-center text-red-500">{message}</p>}
       </div>
+      {showLoader && <Loader />}
     </div>
   );
 };

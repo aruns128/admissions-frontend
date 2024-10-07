@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Layout from "../common/Layout";
 import api from "../../utils/api";
+import { FaUserEdit } from "react-icons/fa";
+import { AiFillDelete } from "react-icons/ai";
 
 function User() {
   const [users, setUsers] = useState([]); // Updated to fetch users from API
@@ -55,7 +57,8 @@ function User() {
 
   // Handle editing a user
   const handleEdit = (id) => {
-    const userToEdit = users.find((user) => user.id === id);
+    const userToEdit = users.find((user) => user._id === id);
+    console.log(userToEdit, "userToEdit");
     setFormData({ ...userToEdit });
     setIsEditing(true);
     setEditUserId(id);
@@ -114,18 +117,18 @@ function User() {
                 <td className="border px-4 py-2">{user.name}</td>
                 <td className="border px-4 py-2">{user.email}</td>
                 <td className="border px-4 py-2">{user.role}</td>
-                <td className="border px-4 py-2 flex space-x-2">
+                <td className="border px-4 py-2 flex space-x-2 item-center justify-center">
                   <button
-                    onClick={() => handleEdit(user.id)}
+                    onClick={() => handleEdit(user._id)}
                     className="bg-yellow-500 text-white p-2 rounded hover:bg-yellow-600 transition"
                   >
-                    Edit
+                    <FaUserEdit />
                   </button>
                   <button
                     onClick={() => confirmDelete(user.id)}
                     className="bg-red-500 text-white p-2 rounded hover:bg-red-600 transition"
                   >
-                    Delete
+                    <AiFillDelete />
                   </button>
                 </td>
               </tr>
@@ -158,17 +161,6 @@ function User() {
                     type="email"
                     name="email"
                     value={formData.email}
-                    onChange={handleInputChange}
-                    className="w-full p-2 border rounded"
-                    required
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="block text-gray-700">Password</label>
-                  <input
-                    type="password"
-                    name="password"
-                    value={formData.password}
                     onChange={handleInputChange}
                     className="w-full p-2 border rounded"
                     required

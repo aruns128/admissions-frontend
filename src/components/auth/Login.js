@@ -103,7 +103,9 @@ function Login() {
       {!isLoggedIn && (
         <div className="w-1/2 hidden lg:flex flex-col justify-center items-center bg-blue-100 p-6">
           <h2 className="text-3xl font-bold mb-4">Inspiration</h2>
-          <p className="text-lg text-center italic">{quote}</p>
+          <p className="text-lg text-center italic">
+            {quote ? quote : "Loading..."}
+          </p>
         </div>
       )}
 
